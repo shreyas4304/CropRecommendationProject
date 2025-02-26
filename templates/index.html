@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        p {
+            font-size: 18px;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Crop Recommendation System</h2>
+    
+    <form action="/predict" method="post">
+        <input type="text" name="N" placeholder="Nitrogen (N)" required>
+        <input type="text" name="P" placeholder="Phosphorus (P)" required>
+        <input type="text" name="K" placeholder="Potassium (K)" required>
+        <input type="text" name="temperature" placeholder="Temperature (°C)" required>
+        <input type="text" name="humidity" placeholder="Humidity (%)" required>
+        <input type="text" name="ph" placeholder="pH Level" required>
+        <input type="text" name="rainfall" placeholder="Rainfall (mm)" required>
+        <button type="submit">Predict Crop</button>
+    </form>
+
+    {% if prediction %}
+        <p><strong>Prediction:</strong> {{ prediction }}</p>
+    {% endif %}
+
+</body>
+</html>
