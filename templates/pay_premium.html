@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Pay for Premium Report{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Premium Report Payment</h4>
+                </div>
+                <div class="card-body text-center">
+                    <p class="lead">Get a detailed, advanced PDF report for your crop recommendation with extra analytics and tips.</p>
+                    <h5 class="mb-3">Price: <span class="text-success">₹9</span></h5>
+                    <a href="{{ url_for('pay_premium', prediction_id=prediction.id) }}?pay=1" class="btn btn-success btn-lg">Pay Now</a>
+                    <p class="mt-3 text-muted">(Demo: This simulates payment. No real payment is made.)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

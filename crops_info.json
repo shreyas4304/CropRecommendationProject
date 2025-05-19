@@ -1,0 +1,268 @@
+{
+    "rice": {
+        "image": "rice.jpg",
+        "ideal_temp": "20-35\u00b0C",
+        "ideal_ph": "5.5 - 6.5",
+        "ideal_rainfall": "100-200 mm",
+        "season": "Kharif",
+        "yield": "3-4 tons per acre",
+        "duration": "120-150 days",
+        "water": "High (1200-1500mm)",
+        "temp_range": "20-35°C",
+        "tips": [
+            "Maintain water level of 2-3 inches during vegetative stage",
+            "Apply nitrogen in 3 splits: basal, tillering, and panicle initiation",
+            "Control weeds during early growth stages",
+            "Monitor for pests like stem borer and leaf folder",
+            "Harvest when 80% of grains are mature"
+        ]
+    },
+    "wheat": {
+        "image": "wheat.jpg",
+        "ideal_temp": "10-25\u00b0C",
+        "ideal_ph": "6.0 - 7.5",
+        "ideal_rainfall": "50-100 mm",
+        "season": "Rabi",
+        "yield": "3-4 tons per acre",
+        "duration": "120-140 days",
+        "water": "Medium (400-500mm)",
+        "temp_range": "15-25°C",
+        "tips": [
+            "Sow at proper depth (5-6 cm)",
+            "Apply phosphorus at sowing",
+            "Control weeds before tillering",
+            "Monitor for rust and powdery mildew",
+            "Harvest when moisture content is 20-25%"
+        ]
+    },
+    "maize": {
+        "season": "Kharif/Rabi",
+        "yield": "4-5 tons per acre",
+        "duration": "90-120 days",
+        "water": "Medium (500-600mm)",
+        "temp_range": "25-30°C",
+        "tips": [
+            "Plant in rows with 60-75 cm spacing",
+            "Apply nitrogen in 3 splits",
+            "Control weeds during first 30 days",
+            "Monitor for stem borer and fall armyworm",
+            "Harvest when moisture content is 20-25%"
+        ]
+    },
+    "cotton": {
+        "image": "cotton.jpg",
+        "ideal_temp": "21-30\u00b0C",
+        "ideal_ph": "5.8 - 8.0",
+        "ideal_rainfall": "65-120 mm",
+        "season": "Kharif",
+        "yield": "2-3 bales per acre",
+        "duration": "150-180 days",
+        "water": "Medium (600-800mm)",
+        "temp_range": "20-35°C",
+        "tips": [
+            "Use Bt cotton varieties for pest resistance",
+            "Apply balanced NPK fertilizers",
+            "Control weeds during first 45 days",
+            "Monitor for bollworm and whitefly",
+            "Harvest when bolls are fully mature"
+        ]
+    },
+    "banana": {
+        "image": "banana.jpg",
+        "ideal_temp": "26-30\u00b0C",
+        "ideal_ph": "5.5 - 6.5",
+        "ideal_rainfall": "100-200 mm",
+        "tips": "Prefers humid tropical climate. Requires good irrigation and rich soil."
+    },
+    "sugarcane": {
+        "season": "Year-round",
+        "yield": "70-80 tons per acre",
+        "duration": "12-18 months",
+        "water": "High (1500-2000mm)",
+        "temp_range": "20-35°C",
+        "tips": [
+            "Plant healthy setts with 2-3 buds",
+            "Apply nitrogen in 3-4 splits",
+            "Maintain proper irrigation schedule",
+            "Control weeds during first 3 months",
+            "Harvest at proper maturity (12-14 months)"
+        ]
+    },
+    "potato": {
+        "season": "Rabi",
+        "yield": "20-25 tons per acre",
+        "duration": "90-120 days",
+        "water": "Medium (400-500mm)",
+        "temp_range": "15-25°C",
+        "tips": [
+            "Use disease-free seed tubers",
+            "Apply balanced NPK fertilizers",
+            "Maintain proper soil moisture",
+            "Control late blight with fungicides",
+            "Harvest when vines start drying"
+        ]
+    },
+    "tomato": {
+        "season": "Year-round",
+        "yield": "25-30 tons per acre",
+        "duration": "90-120 days",
+        "water": "Medium (500-600mm)",
+        "temp_range": "20-30°C",
+        "tips": [
+            "Use hybrid varieties for better yield",
+            "Apply calcium to prevent blossom end rot",
+            "Control weeds during early growth",
+            "Monitor for leaf curl virus",
+            "Harvest at proper maturity stage"
+        ]
+    },
+    "chickpea": {
+        "image": "chickpea.jpg",
+        "ideal_temp": "20-25\u00b0C",
+        "ideal_ph": "6.0 - 7.0",
+        "ideal_rainfall": "40-60 mm",
+        "season": "Rabi",
+        "yield": "1.5-2 tons per acre",
+        "duration": "90-120 days",
+        "water": "Low (300-400mm)",
+        "temp_range": "20-30°C",
+        "tips": [
+            "Use disease-resistant varieties",
+            "Apply phosphorus at sowing",
+            "Control weeds during first 30 days",
+            "Monitor for pod borer",
+            "Harvest when pods are fully mature"
+        ]
+    },
+    "pigeonpea": {
+        "season": "Kharif",
+        "yield": "1-1.5 tons per acre",
+        "duration": "150-180 days",
+        "water": "Low (400-500mm)",
+        "temp_range": "25-35°C",
+        "tips": [
+            "Use early maturing varieties",
+            "Apply balanced fertilizers",
+            "Control weeds during first 45 days",
+            "Monitor for pod borer",
+            "Harvest when pods are fully mature"
+        ]
+    },
+    "mungbean": {
+        "season": "Kharif/Zaid",
+        "yield": "0.8-1 ton per acre",
+        "duration": "60-90 days",
+        "water": "Low (300-400mm)",
+        "temp_range": "25-35°C",
+        "tips": [
+            "Use certified seeds",
+            "Apply phosphorus at sowing",
+            "Control weeds during first 30 days",
+            "Monitor for yellow mosaic virus",
+            "Harvest when pods are fully mature"
+        ]
+    },
+    "lettuce": {
+        "season": "Year-round",
+        "yield": "25-30 heads per sq meter",
+        "duration": "30-45 days",
+        "water": "Low (hydroponic/aeroponic)",
+        "temp_range": "15-22°C",
+        "tips": [
+            "Maintain consistent temperature",
+            "Monitor nutrient solution daily",
+            "Harvest when heads reach desired size",
+            "Control humidity to prevent disease",
+            "Space plants properly for air circulation"
+        ]
+    },
+    "spinach": {
+        "season": "Year-round",
+        "yield": "2-3 kg per sq meter",
+        "duration": "40-50 days",
+        "water": "Low (hydroponic/aeroponic)",
+        "temp_range": "15-20°C",
+        "tips": [
+            "Keep temperature below 24°C",
+            "Monitor iron levels in solution",
+            "Harvest outer leaves as needed",
+            "Maintain proper spacing",
+            "Control light exposure"
+        ]
+    },
+    "herbs": {
+        "season": "Year-round",
+        "yield": "1-2 kg per sq meter",
+        "duration": "30-60 days",
+        "water": "Low (hydroponic/aeroponic)",
+        "temp_range": "18-24°C",
+        "tips": [
+            "Maintain proper light levels",
+            "Prune regularly for bushier growth",
+            "Monitor nutrient concentration",
+            "Control humidity levels",
+            "Harvest regularly to promote growth"
+        ]
+    },
+    "muskmelon": {
+        "season": "Rabi/Summer",
+        "yield": "15-20 tons per acre",
+        "duration": "90-120 days",
+        "water": "Medium (500-600mm)",
+        "temp_range": "24-35°C",
+        "vertical_farming": false,
+        "tips": [
+            "Maintain consistent soil moisture",
+            "Provide good air circulation",
+            "Support fruits with nets or slings",
+            "Monitor for pests and diseases",
+            "Harvest when fruits develop netting pattern"
+        ]
+    },
+    "radish_microgreens": {
+        "season": "Year-round",
+        "yield": "1-1.5 kg per sq meter per harvest",
+        "duration": "7-10 days",
+        "water": "Low (hydroponic/aeroponic)",
+        "temp_range": "18-24°C",
+        "vertical_farming": true,
+        "tips": [
+            "Maintain consistent moisture but avoid waterlogging",
+            "Use clean, sterile growing medium",
+            "Provide good air circulation to prevent mold",
+            "Harvest when first true leaves appear",
+            "Keep temperature stable for uniform growth",
+            "Use quality seeds with high germination rate"
+        ]
+    },
+    "pea_shoots": {
+        "season": "Year-round",
+        "yield": "1.2-1.8 kg per sq meter per harvest",
+        "duration": "8-12 days",
+        "water": "Low (hydroponic/aeroponic)",
+        "temp_range": "18-22°C",
+        "vertical_farming": true,
+        "tips": [
+            "Soak seeds for 8-12 hours before planting",
+            "Maintain humidity during germination",
+            "Provide moderate light after sprouting",
+            "Harvest when shoots are 4-6 inches tall",
+            "Stack growing trays vertically for efficiency"
+        ]
+    },
+    "sunflower_microgreens": {
+        "season": "Year-round",
+        "yield": "0.8-1.2 kg per sq meter per harvest",
+        "duration": "8-12 days",
+        "water": "Low (hydroponic/aeroponic)",
+        "temp_range": "18-24°C",
+        "vertical_farming": true,
+        "tips": [
+            "Soak seeds for 12 hours before planting",
+            "Remove seed hulls before harvesting",
+            "Keep in dark until germination",
+            "Harvest when cotyledons are fully developed",
+            "Maintain good spacing between seeds"
+        ]
+    }
+}
