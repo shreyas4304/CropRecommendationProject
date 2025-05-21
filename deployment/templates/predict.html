@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-seedling"></i> Crop Recommendation</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('predict') }}">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="area" class="form-label">Growing Area (sq ft)</label>
+                                <input type="number" class="form-control" id="area" name="area" required min="1">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="investment" class="form-label">Investment Range (₹)</label>
+                                <select class="form-select" id="investment" name="investment" required>
+                                    <option value="">Select Investment Range</option>
+                                    <option value="10000-50000">₹10,000 - ₹50,000</option>
+                                    <option value="50000-100000">₹50,000 - ₹1,00,000</option>
+                                    <option value="100000-200000">₹1,00,000 - ₹2,00,000</option>
+                                    <option value="200000+">Above ₹2,00,000</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="temperature" class="form-label">Temperature (°C)</label>
+                                <input type="number" class="form-control" id="temperature" name="temperature" required step="0.1">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="humidity" class="form-label">Humidity (%)</label>
+                                <input type="number" class="form-control" id="humidity" name="humidity" required min="0" max="100">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="ph" class="form-label">Soil pH</label>
+                                <input type="number" class="form-control" id="ph" name="ph" required step="0.1" min="0" max="14">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="rainfall" class="form-label">Rainfall (mm)</label>
+                                <input type="number" class="form-control" id="rainfall" name="rainfall" required min="0">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="growing_season" class="form-label">Growing Season</label>
+                                <select class="form-select" id="growing_season" name="growing_season" required>
+                                    <option value="">Select Season</option>
+                                    <option value="kharif">Kharif (June-October)</option>
+                                    <option value="rabi">Rabi (October-March)</option>
+                                    <option value="zaid">Zaid (March-June)</option>
+                                    <option value="year_round">Year Round</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="irrigation_type" class="form-label">Irrigation Type</label>
+                                <select class="form-select" id="irrigation_type" name="irrigation_type" required>
+                                    <option value="">Select Irrigation Type</option>
+                                    <option value="drip">Drip Irrigation</option>
+                                    <option value="sprinkler">Sprinkler System</option>
+                                    <option value="flood">Flood Irrigation</option>
+                                    <option value="manual">Manual Watering</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-search"></i> Get Recommendations
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if prediction %}
+            <div class="card shadow mt-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-chart-bar"></i> Recommendation Results</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Recommended Crops</h5>
+                    <div class="list-group">
+                        {% for crop in prediction %}
+                        <div class="list-group-item">
+                            <h6 class="mb-1">{{ crop.name }}</h6>
+                            <p class="mb-1">{{ crop.description }}</p>
+                            <small class="text-muted">
+                                Expected Yield: {{ crop.expected_yield }}<br>
+                                Growing Tips: {{ crop.growing_tips }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ url_for('generate_pdf') }}" class="btn btn-outline-success">
+                            <i class="fas fa-file-pdf"></i> Download PDF Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

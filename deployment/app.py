@@ -91,9 +91,6 @@ class ConsultationBooking(db.Model):
     topic = db.Column(db.String(200), nullable=True)
     paid = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(20), default='pending')  # pending, confirmed, completed, cancelled
-    payment_id = db.Column(db.String(100), nullable=True)
-    amount = db.Column(db.Float, default=19.0)  # Default consultation fee
 
 # Load crop information
 with open('crops_info.json', 'r') as f:
@@ -926,10 +923,7 @@ def consultation():
             email=email,
             phone=phone,
             preferred_datetime=preferred_datetime,
-            topic=topic,
-            paid=False,
-            status='pending',
-            amount=price
+            topic=topic
         )
         db.session.add(booking)
         db.session.commit()
@@ -940,14 +934,13 @@ def consultation():
 @app.route('/consultation_payment/<int:booking_id>')
 def consultation_payment(booking_id):
     booking = ConsultationBooking.query.get_or_404(booking_id)
+    price = 19
     if 'pay' in request.args:
         booking.paid = True
-        booking.status = 'confirmed'
-        booking.payment_id = f"PAY-{int(time.time())}"  # Generate a unique payment ID
         db.session.commit()
         flash('Payment successful! Your consultation is confirmed. We will contact you soon.', 'success')
-        return redirect(url_for('dashboard'))
-    return render_template('consultation_payment.html', booking=booking, price=booking.amount)
+        return redirect(url_for('consultation_payment', booking_id=booking.id))
+    return render_template('consultation_payment.html', booking=booking, price=price)
 
 if __name__ == "__main__":
     app.run(debug=True)

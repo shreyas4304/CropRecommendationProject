@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Book a Consultation - Smart Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Book a Consultation</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 text-center">
+                        <span class="badge bg-success fs-5">Price: ₹{{ price }}</span>
+                    </div>
+                    <form method="POST" action="{{ url_for('consultation') }}" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="topic" class="form-label">Consultation Topic</label>
+                            <select class="form-select" id="topic" name="topic" required>
+                                <option value="">Select a topic</option>
+                                {% for t in topics %}
+                                <option value="{{ t }}">{{ t }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="preferred_datetime" class="form-label">Preferred Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="preferred_datetime" name="preferred_datetime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="details" class="form-label">Topic Details (Optional)</label>
+                            <textarea class="form-control" id="details" name="details" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-info">Book Consultation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

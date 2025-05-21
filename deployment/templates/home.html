@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Crop Recommendation System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h1 class="display-4 mb-4">Welcome to Smart Farming</h1>
+            <p class="lead mb-4">Your AI-powered crop recommendation system for vertical farming with IoT</p>
+            
+            {% if 'user_id' not in session %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Get Started</h5>
+                    <p class="card-text">To access our crop recommendation system, please register or login.</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{{ url_for('register') }}" class="btn btn-success me-md-2">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-success">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Ready to Get Recommendations?</h5>
+                    <p class="card-text">Access our smart crop recommendation system based on your farm's conditions.</p>
+                    <a href="{{ url_for('predict') }}" class="btn btn-success">
+                        <i class="fas fa-seedling"></i> Get Crop Recommendations
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-robot fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">AI-Powered</h5>
+                    <p class="card-text">Get accurate crop recommendations using advanced machine learning algorithms.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Smart Analytics</h5>
+                    <p class="card-text">Analyze your farm's potential with detailed yield predictions and growing tips.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">IoT Ready</h5>
+                    <p class="card-text">Prepare your farm for the future with IoT integration capabilities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Crop Recommendation System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Crop Recommendation System</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <form method="POST" action="{{ url_for('predict') }}" class="needs-validation" novalidate>
+                <div class="form-group mb-3">
+                    <label for="state">State</label>
+                    <select class="form-control" id="state" name="state" required>
+                        <option value="">Select State</option>
+                        {% for state in states %}
+                        <option value="{{ state }}">{{ state }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="district">District</label>
+                    <select class="form-control" id="district" name="district" disabled>
+                        <option value="">Select District</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="farm_size">Farm Size (in square meters)</label>
+                    <input type="number" class="form-control" id="farm_size" name="farm_size" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="farming_type">Farming Type</label>
+                    <select class="form-control" id="farming_type" name="farming_type" required>
+                        <option value="traditional">Traditional</option>
+                        <option value="vertical">Vertical Farming</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="growing_season">Growing Season</label>
+                    <select class="form-control" id="growing_season" name="growing_season" required>
+                        <option value="kharif">Kharif</option>
+                        <option value="rabi">Rabi</option>
+                        <option value="zaid">Zaid</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="investment_range">Investment Range</label>
+                    <select class="form-control" id="investment_range" name="investment_range" required>
+                        <option value="0-50000">₹0 - ₹50,000</option>
+                        <option value="50000-100000">₹50,000 - ₹1,00,000</option>
+                        <option value="100000-500000">₹1,00,000 - ₹5,00,000</option>
+                        <option value="500000+">Above ₹5,00,000</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="experience">Years of Experience</label>
+                    <input type="number" class="form-control" id="experience" name="experience" min="0" max="50" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Get Recommendation</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            {% if crop_info %}
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ prediction }}</h4>
+                </div>
+                <div class="card-body">
+                    {% if crop_info.input_parameters %}
+                    <div class="mb-3">
+                        <h5>Input Parameters</h5>
+                        <ul>
+                            <li><strong>State:</strong> {{ crop_info.input_parameters.state }}</li>
+                            <li><strong>District:</strong> {{ crop_info.input_parameters.district }}</li>
+                            <li><strong>Farm Size:</strong> {{ crop_info.input_parameters.farm_size }}</li>
+                            <li><strong>Farming Type:</strong> {{ crop_info.input_parameters.farming_type }}</li>
+                            <li><strong>Growing Season:</strong> {{ crop_info.input_parameters.growing_season }}</li>
+                            <li><strong>Investment Range:</strong> {{ crop_info.input_parameters.investment_range }}</li>
+                            <li><strong>Experience:</strong> {{ crop_info.input_parameters.experience }}</li>
+                        </ul>
+                        {% if crop_info.input_parameters.weather_used %}
+                        <h6>Weather Used</h6>
+                        <ul>
+                            <li><strong>Temperature:</strong> {{ crop_info.input_parameters.weather_used.temperature }}</li>
+                            <li><strong>Humidity:</strong> {{ crop_info.input_parameters.weather_used.humidity }}</li>
+                            <li><strong>Rainfall:</strong> {{ crop_info.input_parameters.weather_used.rainfall }}</li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <h5>Crop Details</h5>
+                    <ul>
+                        <li><strong>Growing Season:</strong> {{ crop_info.growing_season }}</li>
+                        <li><strong>Expected Yield:</strong> {{ crop_info.expected_yield }}</li>
+                        <li><strong>Growing Duration:</strong> {{ crop_info.growing_duration }}</li>
+                        <li><strong>Water Requirements:</strong> {{ crop_info.water_requirements }}</li>
+                        <li><strong>Temperature Range:</strong> {{ crop_info.temperature_range }}</li>
+                    </ul>
+
+                    {% if crop_info.growing_category %}
+                    <h5>Growing Category</h5>
+                    <ul>
+                        <li><strong>Name:</strong> {{ crop_info.growing_category.name }}</li>
+                        <li><strong>Difficulty:</strong> {{ crop_info.growing_category.difficulty }}</li>
+                        <li><strong>Space Efficiency:</strong> {{ crop_info.growing_category.space_efficiency }}</li>
+                        <li><strong>Growth Rate:</strong> {{ crop_info.growing_category.growth_rate }}</li>
+                    </ul>
+                    {% endif %}
+
+                    {% if crop_info.selection_factors %}
+                    <h5>Selection Factors</h5>
+                    <ul>
+                        {% for factor, value in crop_info.selection_factors.items() %}
+                        <li>{{ factor.replace('_', ' ').title() }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    {% if crop_info.region_specific %}
+                    <h5>Region Information</h5>
+                    <ul>
+                        <li><strong>Soil Type:</strong> {{ crop_info.region_specific.soil_type }}</li>
+                        <li><strong>Climate Zone:</strong> {{ crop_info.region_specific.climate_zone }}</li>
+                        <li><strong>Best Growing Season:</strong> {{ crop_info.region_specific.seasonal_timing }}</li>
+                        <li><strong>Other Suitable Crops:</strong> {{ crop_info.region_specific.suitable_crops|join(', ') }}</li>
+                    </ul>
+                    <h6>Market Analysis</h6>
+                    <ul>
+                        <li><strong>Demand:</strong> {{ crop_info.region_specific.market_demand.demand }}</li>
+                        <li><strong>Price Trend:</strong> {{ crop_info.region_specific.market_demand.price_trend }}</li>
+                        <li><strong>Export Potential:</strong> {{ crop_info.region_specific.market_demand.export_potential }}</li>
+                    </ul>
+                    <h6>Government Schemes</h6>
+                    <ul>
+                        {% for scheme, details in crop_info.region_specific.applicable_schemes.items() %}
+                        <li><strong>{{ scheme }}:</strong> {{ details.description }} <small>Benefits: {{ details.benefits }}</small></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    {% if crop_info.vertical_farming_methods %}
+                    <h5>Recommended Vertical Farming Methods</h5>
+                    <ul>
+                        {% for method in crop_info.vertical_farming_methods %}
+                        <li><strong>{{ method.name|title }}:</strong> {{ method.description }}<br><small>Advantages: {{ method.advantages|join(', ') }}</small></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    {% if crop_info.tips %}
+                    <h5>Growing Tips</h5>
+                    <ul>
+                        {% for tip in crop_info.tips %}
+                        <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            {% if prediction and crop_info %}
+            <div class="mt-4 text-center">
+                {% if session['user_id'] %}
+                    {% set user_predictions = predictions if predictions is defined else [] %}
+                    {% set last_prediction = user_predictions[0] if user_predictions|length > 0 else None %}
+                    {% if last_prediction and not last_prediction.premium_paid %}
+                        <a href="{{ url_for('pay_premium', prediction_id=last_prediction.id) }}" class="btn btn-warning mt-2">Get Premium Report</a>
+                    {% elif last_prediction and last_prediction.premium_paid %}
+                        <a href="{{ url_for('download_premium_pdf', prediction_id=last_prediction.id) }}" class="btn btn-success mt-2">Download Premium Report</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('state').addEventListener('change', function() {
+    const state = this.value;
+    const districtSelect = document.getElementById('district');
+    
+    if (state) {
+        fetch(`/get_districts/${state}`)
+            .then(response => response.json())
+            .then(districts => {
+                districtSelect.innerHTML = '<option value="">Select District</option>';
+                districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+                districtSelect.disabled = false;
+            });
+    } else {
+        districtSelect.innerHTML = '<option value="">Select District</option>';
+        districtSelect.disabled = true;
+    }
+});
+
+// This event listener is not strictly needed for the new functionality
+// but kept in case district selection is used elsewhere or for future features
+document.getElementById('district').addEventListener('change', function() {
+    const state = document.getElementById('state').value;
+    const district = this.value;
+    
+    if (state && district) {
+        fetch(`/get_region_info/${state}/${district}`)
+            .then(response => response.json())
+            .then(data => {
+                // You can use this data to pre-fill or update other form fields
+                console.log('Region Info:', data);
+            });
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %}

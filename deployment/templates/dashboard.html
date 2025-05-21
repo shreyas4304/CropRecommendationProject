@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Smart Crop Recommendation{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+            <p class="text-muted">Welcome back, {{ session.get('user_name', 'User') }}!</p>
+        </div>
+    </div>
+
+    {% if session['user_id'] %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Submit Your Feedback</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_testimonial') }}" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating</label>
+                            <div class="rating">
+                                {% for i in range(5, 0, -1) %}
+                                <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" required>
+                                <label for="star{{ i }}"><i class="fas fa-star"></i></label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Your State</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Your Experience</label>
+                            <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if user_testimonials and user_testimonials|length > 0 %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-comment-dots"></i> Your Feedback</h5>
+                </div>
+                <div class="card-body">
+                    {% for testimonial in user_testimonials %}
+                    <div class="mb-3 p-3 border rounded bg-light">
+                        <div class="mb-2">
+                            {% for i in range(testimonial.rating) %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% endfor %}
+                            {% for i in range(5 - testimonial.rating) %}
+                                <i class="far fa-star text-warning"></i>
+                            {% endfor %}
+                        </div>
+                        <p class="mb-1">{{ testimonial.content }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">State: {{ testimonial.location }}</small>
+                            <small class="text-muted">Feedback on {{ testimonial.created_at.strftime('%d %b %Y') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- IoT Data Charts -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-line"></i> IoT Sensor Data</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="iotChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Predictions -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Recent Predictions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Crop</th>
+                                    <th>Temperature</th>
+                                    <th>Humidity</th>
+                                    <th>pH</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prediction in predictions %}
+                                <tr>
+                                    <td>{{ prediction.predicted_crop }}</td>
+                                    <td>{{ prediction.temperature }}°C</td>
+                                    <td>{{ prediction.humidity }}%</td>
+                                    <td>{{ prediction.ph }}</td>
+                                    <td>{{ prediction.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('generate_pdf', prediction_id=prediction.id) }}" 
+                                           class="btn btn-sm btn-success" 
+                                           title="Download PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-info view-details" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#detailsModal"
+                                                data-prediction-id="{{ prediction.id }}"
+                                                title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        {% if not prediction.premium_paid %}
+                                            <a href="{{ url_for('pay_premium', prediction_id=prediction.id) }}" class="btn btn-sm btn-warning" title="Get Premium Report">
+                                                <i class="fas fa-crown"></i>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('download_premium_pdf', prediction_id=prediction.id) }}" class="btn btn-sm btn-primary" title="Download Premium Report">
+                                                <i class="fas fa-crown"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Prediction Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Soil Nutrients</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Nitrogen (N)</span>
+                                <span class="text-muted" id="modal-nitrogen"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Phosphorus (P)</span>
+                                <span class="text-muted" id="modal-phosphorus"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Potassium (K)</span>
+                                <span class="text-muted" id="modal-potassium"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Environmental Conditions</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Temperature</span>
+                                <span class="text-muted" id="modal-temperature"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Humidity</span>
+                                <span class="text-muted" id="modal-humidity"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>pH Level</span>
+                                <span class="text-muted" id="modal-ph"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Rainfall</span>
+                                <span class="text-muted" id="modal-rainfall"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize IoT Chart
+    const ctx = document.getElementById('iotChart').getContext('2d');
+    const iotChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_data.labels|tojson }},
+            datasets: [
+                {
+                    label: 'Temperature (°C)',
+                    data: {{ chart_data.temperature|tojson }},
+                    borderColor: 'rgb(255, 99, 132)',
+                    tension: 0.1
+                },
+                {
+                    label: 'Humidity (%)',
+                    data: {{ chart_data.humidity|tojson }},
+                    borderColor: 'rgb(54, 162, 235)',
+                    tension: 0.1
+                },
+                {
+                    label: 'Moisture (%)',
+                    data: {{ chart_data.moisture|tojson }},
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Handle view details button clicks
+    document.querySelectorAll('.view-details').forEach(button => {
+        button.addEventListener('click', function() {
+            const predictionId = this.dataset.predictionId;
+            // Fetch prediction details and update modal
+            fetch(`/api/prediction/${predictionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('modal-nitrogen').textContent = data.nitrogen;
+                    document.getElementById('modal-phosphorus').textContent = data.phosphorus;
+                    document.getElementById('modal-potassium').textContent = data.potassium;
+                    document.getElementById('modal-temperature').textContent = `${data.temperature}°C`;
+                    document.getElementById('modal-humidity').textContent = `${data.humidity}%`;
+                    document.getElementById('modal-ph').textContent = data.ph;
+                    document.getElementById('modal-rainfall').textContent = `${data.rainfall}mm`;
+                });
+        });
+    });
+});
+</script>
+{% endblock %}

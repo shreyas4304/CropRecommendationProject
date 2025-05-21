@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Smart Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="fas fa-user-shield"></i> Admin Dashboard</h2>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="crop" class="form-label">Crop</label>
+                            <select class="form-select" id="crop" name="crop">
+                                <option value="">All Crops</option>
+                                {% for crop in crops %}
+                                <option value="{{ crop }}">{{ crop }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date_from" class="form-label">Date From</label>
+                            <input type="date" class="form-control" id="date_from" name="date_from">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date_to" class="form-label">Date To</label>
+                            <input type="date" class="form-control" id="date_to" name="date_to">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-success d-block w-100">
+                                <i class="fas fa-filter"></i> Apply Filters
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Predictions Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Crop</th>
+                                    <th>Temperature</th>
+                                    <th>Humidity</th>
+                                    <th>pH</th>
+                                    <th>Rainfall</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prediction in predictions %}
+                                <tr>
+                                    <td>{{ prediction.id }}</td>
+                                    <td>{{ prediction.user.fullname }}</td>
+                                    <td>{{ prediction.predicted_crop }}</td>
+                                    <td>{{ prediction.temperature }}°C</td>
+                                    <td>{{ prediction.humidity }}%</td>
+                                    <td>{{ prediction.ph }}</td>
+                                    <td>{{ prediction.rainfall }}mm</td>
+                                    <td>{{ prediction.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('generate_pdf', prediction_id=prediction.id) }}" 
+                                           class="btn btn-sm btn-success" 
+                                           title="Download PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-info view-details" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#detailsModal"
+                                                data-prediction-id="{{ prediction.id }}"
+                                                title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Prediction Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Soil Nutrients</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Nitrogen (N)</span>
+                                <span class="text-muted" id="modal-nitrogen"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Phosphorus (P)</span>
+                                <span class="text-muted" id="modal-phosphorus"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Potassium (K)</span>
+                                <span class="text-muted" id="modal-potassium"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Environmental Conditions</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Temperature</span>
+                                <span class="text-muted" id="modal-temperature"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Humidity</span>
+                                <span class="text-muted" id="modal-humidity"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>pH Level</span>
+                                <span class="text-muted" id="modal-ph"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Rainfall</span>
+                                <span class="text-muted" id="modal-rainfall"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle view details button clicks
+    document.querySelectorAll('.view-details').forEach(button => {
+        button.addEventListener('click', function() {
+            const predictionId = this.dataset.predictionId;
+            // Fetch prediction details and update modal
+            fetch(`/api/prediction/${predictionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('modal-nitrogen').textContent = data.nitrogen;
+                    document.getElementById('modal-phosphorus').textContent = data.phosphorus;
+                    document.getElementById('modal-potassium').textContent = data.potassium;
+                    document.getElementById('modal-temperature').textContent = `${data.temperature}°C`;
+                    document.getElementById('modal-humidity').textContent = `${data.humidity}%`;
+                    document.getElementById('modal-ph').textContent = data.ph;
+                    document.getElementById('modal-rainfall').textContent = `${data.rainfall}mm`;
+                });
+        });
+    });
+});
+</script>
+{% endblock %}
